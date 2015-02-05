@@ -1,24 +1,22 @@
 ﻿var config = require('../config/config.js');
 
-function Station() {
-    this.name = "";
-    this.name = "";
-    this.name = "";
-    this.name = "";
-    this.name = "";
+function Station(jsonData) {
+    if(jsonData != null){
+	this.id = jsonData.id;
+	this.name = jsonData.name;
+	this.streamurl = jsonData.streamurl;
+	this.country = jsonData.country;
+	this.bitrate = jsonData.bitrate;
+	this.status = jsonData.status;
+    }
+    else{
+	this.id = 0;
+	this.name = "";
+	this.streamurl = "";
+	this.country = "";
+	this.bitrate = "";
+	this.status = 0;
+    }
 };
 
-DirbleRepository.prototype.searchForStation = function (stationName) {
-    var url = config.api.searchStations.format(stationName);
-    request(url, function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-            console.log(body);
-        }
-        else {
-            console.log(error);
-        }
-    });
-};
-
-module.exports = DirbleRepository;
-
+module.exports = Station;

@@ -5,12 +5,17 @@
   "main": "app.js",
   "author": {
     "name": "Tyler",
-    "email": ""
+    "email": "tyler.j.vanderhoef@gmail.com"
   },
+  "repository": "https://github.com/tvand7093/Interclock.git",
   "dependencies": {
     "express": "^3.4.4",
     "jade": "*",
     "request": "^2.53.0",
-    "stylus": "*"
+    "stylus": "*",
+    "method-override":"*",
+    "fs": "*",
+    "lame": "*",
+    "speaker":"*"
   }
 }

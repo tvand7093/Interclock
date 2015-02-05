@@ -1,20 +1,36 @@
-﻿var config = require('../config/config.js');
+﻿
+var config = require('../config/config.js');
 var request = require('request');
+var Station = require('./station.js');
+
 function DirbleRepository() {
-    this.name = "dirble";
+    this.currentResults = [];
 };
 
-DirbleRepository.prototype.searchForStation = function (stationName) {
-    var url = config.api.searchStations.format(stationName);
-    request(url, function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-            console.log(body);
-        }
-        else {
-            console.log(error);
-        }
+DirbleRepository.prototype.makeApiCall = function(url, success, failure){
+    request(url, function(error, response, json){
+	var results = [];
+	if(!error && response.statusCode == 200){
+	    json = JSON.parse(json);
+	    if(json.length == 1){
+		success(json[0]);
+		return;
+	    }
+	    else{
+		success(json);
+		return;
+	    }
+	}
+	else{
+	    failure(error);
+	}
     });
 };
+
+DirbleRepository.prototype.searchForStation = function(station, success, failure){
+    var url = config.api.searchStations.format(station);
+    this.makeApiCall(url, success, failure);
+}
 
 module.exports = DirbleRepository;
 
