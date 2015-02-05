@@ -6,6 +6,7 @@
 var express = require('express');
 var routes = require('./routes');
 var user = require('./routes/user');
+var station = require('./routes/station');
 var http = require('http');
 var path = require('path');
 var ext = require('./misc/extensions.js');
@@ -31,29 +32,10 @@ if ('development' == app.get('env')) {
 
 app.get('/', routes.index);
 app.get('/users', user.list);
-
-var mplayer = null;
+app.get('/radiodue', station.radiodue);
+app.get('/radiotre', station.radiotre);
+app.get('/off', station.off);
 
 http.createServer(app).listen(app.get('port'), function(){
     console.log('Express server listening on port ' + app.get('port'));
-    var DirbleRepository = require('./repos/dirbleRepository.js');
-    var d = new DirbleRepository();
-    
-    console.log("Searched for radio and found the following--------\n");
-    d.searchForStation("radiodue", function(results){
-	d.currentResults = results;
-	console.log(d.currentResults);
-	if(mplayer != null){
-	    mplayer.kill('SIGINT');
-	}
-
-	//spawn it up!
-	var curl = proc.spawn('curl', [results.streamurl]);
-	
-	curl.stdout.on('data', function (data) {
-    	    //mplayer = curl.spawn('mplayer', ['-ao', 'openal',  data]);
-	    mplayer = proc.exec('mplayer ' + data + ' > music.log');
-	});
-    });
-
 });

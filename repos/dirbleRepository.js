@@ -5,6 +5,7 @@ var Station = require('./station.js');
 
 function DirbleRepository() {
     this.currentResults = [];
+    this.runningAudio = [];
 };
 
 DirbleRepository.prototype.makeApiCall = function(url, success, failure){
