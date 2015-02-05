@@ -1,0 +1,16 @@
+{
+  "name": "InterClock",
+  "version": "0.0.0",
+  "description": "InterClock",
+  "main": "app.js",
+  "author": {
+    "name": "Tyler",
+    "email": ""
+  },
+  "dependencies": {
+    "express": "^3.4.4",
+    "jade": "*",
+    "request": "^2.53.0",
+    "stylus": "*"
+  }
+}
