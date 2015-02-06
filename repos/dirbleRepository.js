@@ -1,11 +1,9 @@
-﻿
-var config = require('../config/config.js');
+﻿var config = require('../config/config');
 var request = require('request');
-var Station = require('./station.js');
+var extensions = require('../misc/extensions');
 
 function DirbleRepository() {
-    this.currentResults = [];
-    this.runningAudio = [];
+    this.isRunningAudio = false;;
 };
 
 DirbleRepository.prototype.makeApiCall = function(url, success, failure){
@@ -15,11 +13,9 @@ DirbleRepository.prototype.makeApiCall = function(url, success, failure){
 	    json = JSON.parse(json);
 	    if(json.length == 1){
 		success(json[0]);
-		return;
 	    }
 	    else{
 		success(json);
-		return;
 	    }
 	}
 	else{
@@ -30,6 +26,11 @@ DirbleRepository.prototype.makeApiCall = function(url, success, failure){
 
 DirbleRepository.prototype.searchForStation = function(station, success, failure){
     var url = config.api.searchStations.format(station);
+    this.makeApiCall(url, success, failure);
+}
+
+DirbleRepository.prototype.getStation = function(stationId, success, failure){
+    var url = config.api.station.format(stationId);
     this.makeApiCall(url, success, failure);
 }
 

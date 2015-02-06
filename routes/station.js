@@ -1,47 +1,46 @@
-var DirbleRepository = require('../repos/dirbleRepository.js');
+var DirbleRepository = require('../repos/dirbleRepository');
 var proc = require('child_process');
+var Results = require('../repos/apiCodes');
+var AudioManager = require('../repos/audioManager').AudioManager;
+
+var audio = new AudioManager();
+var codes = Results.statusCodes;
+var ApiResult = Results.ApiResult;
 var api = new DirbleRepository();
 
-function stopCurrentlyRunning(){
-    if(api.runningAudio.length > 0){
-	proc.spawn('killall', ['mplayer']);
-	api.runningAudio.pop();
+exports.play = function(req, res){
+    if(req.params.id != null){
+	api.getStation(req.params.id, function(station){
+	    if(station != null){
+		var result = audio.play(station.streamurl);
+		result.result = station;
+
+		res.send(result);
+	    }
+	});
     }
 }
 
-function playStation(station){
-    stopCurrentlyRunning();
-    //spawn it up!
-    var curl = proc.spawn('curl', [station.streamurl]);
-    curl.stdout.on('data', function (data) {
-	api.runningAudio.push(proc.exec('mplayer ' + data + ' > /dev/null'));
-    });
-}
-
-exports.radiodue  = function(req, res){
-    //start radio due
-    api.searchForStation("radiodue", function(station){
-	playStation(station);
-    });
-    
-  res.send("Playing RAI Radio Due!");
+exports.search = function(req, res){
+    if(req.params.search != null){
+	//do search
+	api.searchForStation(req.params.search, function(station) {
+	    var reply = station != null ? 
+		new ApiResult(codes.success, null, station) :
+		new ApiResult(codes.stationNotFound,
+			      "Could not find a station matching: " + req.params.search,
+			     station);
+	    res.send(reply);
+	}, function(error){
+	    res.send(new ApiResult(codes.unknown, error, error));
+	});	
+    }
 };
 
-
-exports.radiotre  = function(req, res){
-    //start radio due
-    api.searchForStation("radiotre", function(station){
-	playStation(station);
-    });
-    
-  res.send("Playing RAI Radio Tre!");
-};
-
-exports.off  = function(req, res){
+exports.stop = function(req, res){
     //stop all radio from playing
-    stopCurrentlyRunning();
-    
-  res.send("Alarm has been turned off!");
+    var result = audio.stop();
+   res.send(result);
 };
 
 
