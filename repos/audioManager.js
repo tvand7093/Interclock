@@ -9,7 +9,7 @@ function AudioManager(){
     this.mPlayer = 'mplayer';
     this.nullDev = '/dev/null';
     this.killAll = 'killall';
-    this.playerCommand = "%s %s > %s";
+    this.playerCommand = "%s %s &> %s";
     this.currentAudio = {};
 }
 
@@ -20,7 +20,7 @@ AudioManager.prototype.generatePlayCommand = function(url){
 };
 
 AudioManager.prototype.beginAudio = function(url){
-    proc.exec(this.generatePlayCommand(url));
+    var play = proc.exec(this.generatePlayCommand(url));
     this.isRunningAudio = true;
     return new ApiResult(codes.success, "Succesfully started playing audio.");
 
@@ -32,7 +32,9 @@ AudioManager.prototype.stop = function(){
     }
     
     if(this.isRunningAudio){
-	proc.spawn(this.killAll, [this.mPlayer]);
+	var kill = proc.spawn(this.killAll, [this.mPlayer]);
+	kill.stdout.resume();
+	kill.stderr.resume();
 	this.isRunningAudio = false;
 	return new ApiResult(codes.success,"Audio stopped successfully.");
     }
