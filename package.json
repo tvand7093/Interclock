@@ -13,9 +13,6 @@
     "jade": "*",
     "request": "^2.53.0",
     "stylus": "*",
-    "method-override":"*",
-    "fs": "*",
-    "lame": "*",
-    "speaker":"*"
+    "method-override":"*"
   }
 }
