@@ -1,3 +1,5 @@
 #!/bin/bash
 
-`node ../app.js > ../logs/server.log &`
+DIR="$HOME/Server/Interclock/"
+`node "$DIR/app.js" > "$DIR/logs/server.log &"`
+exit 0

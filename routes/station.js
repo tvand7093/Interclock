@@ -11,8 +11,9 @@ var api = new DirbleRepository();
 exports.play = function(req, res){
     if(req.params.id != null){
 	api.getStation(req.params.id, function(station){
-	    if(station != null){
-		var result = audio.play(station.streamurl);
+	    if(station != null && station.result.length > 0){
+		console.log(station.result);
+		var result = audio.play(station.result[0].streamurl);
 		result.result = station;
 
 		res.send(result);

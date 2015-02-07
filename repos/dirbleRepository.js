@@ -11,12 +11,7 @@ DirbleRepository.prototype.makeApiCall = function(url, success, failure){
 	var results = [];
 	if(!error && response.statusCode == 200){
 	    json = JSON.parse(json);
-	    if(json.length == 1){
-		success(json[0]);
-	    }
-	    else{
-		success(json);
-	    }
+	    success(json);
 	}
 	else{
 	    failure(error);
