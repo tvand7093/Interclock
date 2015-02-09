@@ -1,4 +1,4 @@
-﻿# InterClock
+﻿# Interclock
 An internet based alarm clock system using Node.js.
 
 # Requirements
@@ -9,5 +9,5 @@ An internet based alarm clock system using Node.js.
 
 ## Optional
 
-* InterClock Companion iOS app.
+* Interclock Companion iOS app.
 
