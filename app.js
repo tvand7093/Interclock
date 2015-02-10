@@ -7,6 +7,14 @@ var http = require('http');
 var path = require('path');
 var app = express();
 var proc = require('child_process');
+var io = require('socket.io')
+
+
+io.on('connection', function (socket){
+    socket.on('audioResult', function(data){
+
+    })
+})
 
 // all environments
 app.set('port', process.env.PORT || 3000);
@@ -31,10 +39,4 @@ router.use(app);
 
 http.createServer(app).listen(app.get('port'), function(){
     console.log('Express server listening on port ' + app.get('port'));
-    //require volume to be up.
-    var vol =path.join(__dirname, 'scripts',
-		       'vol.sh') + ' 95 2> logs/audioError.log';
-    var p = proc.exec(vol);
-	p.stdout.resume();
-	p.stderr.resume();
 });

@@ -3,49 +3,73 @@ var proc = require('child_process');
 var Results = require('./apiCodes');
 var codes = Results.statusCodes;
 var ApiResult = Results.ApiResult;
+var io = require('socket.io')
 
 function AudioManager(){
     this.isRunningAudio = false;
     this.mPlayer = 'mplayer';
     this.nullDev = '/dev/null';
     this.killAll = 'killall';
-    this.playerCommand = "%s %s &> %s";
-    this.currentAudio = {};
+    this.playerCommand = "%s %s";
+    this.currentAudio = {}
+    this.play = "play";
+    this.stop = "stop"
+
+    io.on('connection', function (socket){
+	socket.on('audioResult', function(data){
+	    io.emit('audioResult', data)
+	})
+    })
+    
+    //require volume to be up.
+    var vol = path.join(__dirname, 'scripts', 'vol.sh') +
+	' 95 2> logs/audioError.log';
+    proc.exec(vol);
 }
 
-
-AudioManager.prototype.generatePlayCommand = function(url){
-    return this.playerCommand.format(
-	this.mPlayer, url, this.nullDev);
-};
-
 AudioManager.prototype.beginAudio = function(url){
-    var play = proc.exec(this.generatePlayCommand(url));
-    this.isRunningAudio = true;
-    return new ApiResult(codes.success, "Succesfully started playing audio.");
+    if(this.currentAudio == null){
+	this.currentAudio = proc.spawn(this.mPlayer, [url])
 
+	this.currentAudio.stdout.on(function (stdout){
+	    console.log(stdout);
+	});
+	this.currentAudio.stdin.on(function(stdin){
+	    //check what command is being processed
+	    if(stdin == this.stop) {
+		this.isRunningAudio = false
+		io.emit('audioResult', new ApiResult(codes.success,
+					       "Succesfully stopped playing audio."))
+	    }
+	    if(stdin == this.play) {
+		this.isRunningAudio = true
+		io.emit('audioResult', new ApiResult(codes.success,
+					       "Succesfully started playing audio."))
+	    }
+	});
+
+	this.currentAudio.stderr.on(function(stderr){
+	    var msg = this.isRunningAudio ? "Error while playing audio." :
+		"Error starting audio."
+	    this.isRunningAudio = false
+	    io.emit('audioResult', new ApiResult(codes.error, msg))
+	});
+    }
+    //send command to mplayer to play audio.
+    this.CurrentAudio.stdin.write(this.play)    
 };
 
 AudioManager.prototype.stop = function(){
     if(!this.isRunningAudio){
-	return new ApiResult(codes.success, "No audio is playing.");
+	io.emit('audioResult',
+			 new ApiResult(codes.success, "No audio is playing"))
     }
-    
-    if(this.isRunningAudio){
-	var kill = proc.spawn(this.killAll, [this.mPlayer]);
-	kill.stdout.resume();
-	kill.stderr.resume();
-	this.isRunningAudio = false;
-	return new ApiResult(codes.success,"Audio stopped successfully.");
-    }
-    else{
-	return new ApiResult(codes.error, "Error stopping the audio.");
-    }
+    this.currentAudio.stdin.write(this.stop)    
 };
 
 AudioManager.prototype.play = function(url){
-    this.stop();
-    return this.beginAudio(url); 
+    this.stop()
+    this.beginAudio(url)
 };  
 
 exports.AudioManager = AudioManager;
