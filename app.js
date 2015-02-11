@@ -3,18 +3,9 @@
  */
 
 var express = require('express');
-var http = require('http');
 var path = require('path');
 var app = express();
-var proc = require('child_process');
-var io = require('socket.io')
-
-
-io.on('connection', function (socket){
-    socket.on('audioResult', function(data){
-
-    })
-})
+var http = require('http').Server(app);
 
 // all environments
 app.set('port', process.env.PORT || 3000);
@@ -26,17 +17,15 @@ app.use(express.json());
 app.use(express.urlencoded());
 app.use(app.router);
 app.use(require('stylus').middleware(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(express.static(path.join(__dirname, 'public/scripts')));
 
 // development only
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-//routing
-var router = require('./routes/router');
-router.use(app);
+//sockets and repo setup
+require('./repos/socket').SocketManager(http)
 
-http.createServer(app).listen(app.get('port'), function(){
-    console.log('Express server listening on port ' + app.get('port'));
-});
+http.listen(app.get('port'))

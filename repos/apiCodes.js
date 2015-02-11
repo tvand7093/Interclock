@@ -5,10 +5,11 @@ var statusCodes = {
     playFailed: 3
 };
 
-function ApiResult(code, msg, result){
+function ApiResult(deviceId, code, msg, result){
     this.code = code;
     this.message = msg;
     this.result = result;
+    this.deviceId = deviceId
 };
 
 exports.statusCodes = statusCodes;

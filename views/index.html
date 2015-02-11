@@ -1,0 +1,32 @@
+
+<html>
+  <head>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    </head>
+  <body><button id="click" title='Start' /></body>
+</html>
+
+<script src="../socket.io.js"></script>
+<script typeof="text/javascript">
+
+  $(function(){
+  var deviceId = "my-device-id"
+  var socket = io()
+  socket.on('audioResult', function(data){
+      console.log(data)
+  })
+
+  socket.on('status', function(result){
+  if(deviceId == result.deviceId) console.log(result.status)
+  
+  })
+  
+  $("#click").click(function(e){
+  socket.emit("status", deviceId)
+  
+     })
+
+  })
+  
+  
+</script>
