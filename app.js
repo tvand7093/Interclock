@@ -26,6 +26,8 @@ if ('development' == app.get('env')) {
 }
 
 //sockets and repo setup
-require('./repos/socket').SocketManager(http)
+require('./repos/socket').SocketManager(http, app)
+
+
 
 http.listen(app.get('port'))
