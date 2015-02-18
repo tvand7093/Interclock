@@ -1,7 +1,0 @@
-﻿var config = {}
-
-config.keys = {
-    apiKey: 'a9f79683444236ece519cf34ee9150f6dcbc34a6'
-};
-
-module.exports = config;

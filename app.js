@@ -1,33 +1,23 @@
 ﻿/**
- * Module dependencies.
- */
+* Dependencies.
+*/
+var Hapi = require('hapi'),
+    config = require('./config/settings');
 
-var express = require('express');
-var path = require('path');
-var app = express();
-var http = require('http').Server(app);
+// Create a new server
+var server = new Hapi.Server();
 
-// all environments
-app.set('port', process.env.PORT || 3000);
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
-app.use(express.favicon());
-app.use(express.logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded());
-app.use(app.router);
-app.use(require('stylus').middleware(path.join(__dirname, 'public')));
+// Setup the server with a host and port
+server.connection({host: config.host, port: config.port});
 
-app.use(express.static(path.join(__dirname, 'public/scripts')));
+// Export the server to be required elsewhere.
+module.exports = server;
 
-// development only
-if ('development' == app.get('env')) {
-  app.use(express.errorHandler());
-}
+// Add the server routes
+server.route(require('./config/routes'));
 
-//sockets and repo setup
-require('./repos/socket').SocketManager(http, app)
-
-
-
-http.listen(app.get('port'))
+//Start the server
+server.start(function() {
+    //Log to the console the host and port info
+    console.log('Server started at: ' + server.info.uri);
+});
