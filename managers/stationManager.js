@@ -12,15 +12,18 @@ function StationManager(){
     self = this
 }
 
-StationManager.prototype.isRunning = function(){
-    return self.audio.isRunning()
+StationManager.prototype.running = function(){
+    return self.audio.running()
 }
 
-StationManager.prototype.play = function(deviceId, stationId, callback){
+StationManager.prototype.play = function(deviceId, alarmId, stationId, callback){
     if(stationId != null){
 	self.api.getStation(stationId, function(station){
 	    if(station != null){
-		self.audio.play(deviceId, station.streamurl)
+		self.audio.play(deviceId,
+				alarmId,
+				station.name,
+				station.streamurl)
 		if(callback != null){
 		    callback(station)
 		}	

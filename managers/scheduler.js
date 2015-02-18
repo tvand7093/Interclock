@@ -1,6 +1,6 @@
 var ext = require('../misc/extensions')
 var CronJob = require('cron').CronJob
-var uuid = require('node-uuid')
+
 var daysOfWeek = {
     sunday: 0,
     monday: 1,
@@ -34,7 +34,7 @@ Scheduler.prototype.cancelAlarm = function(alarmId){
     }
 }
 
-Scheduler.prototype.createAlarm = function(hour, min,
+Scheduler.prototype.createAlarm = function(alarmId, hour, min,
 				beginDay, endDay, alarmAction){
     var runRange = '*'
     if(beginDay != endDay){
@@ -57,20 +57,13 @@ Scheduler.prototype.createAlarm = function(hour, min,
     }
 
     var cronString = "%s %s * * %s".format(min, hour, runRange)
-    var alarmId = uuid.v4()
     var alarm = new CronJob(cronString,
 			    function() {
 				alarmAction()
 			    },
-			    function(){
-				self.alarms[alarmId].stop()
-				//ran so remove this from queue
-				self.alarms[alarmId] = null
-			    },
+			    null,
 			    true, "America/Los_Angeles")
 	self.alarms[alarmId] = alarm
-    
-    return alarmId
 }
 
 exports.Scheduler = Scheduler

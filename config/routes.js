@@ -23,7 +23,7 @@ module.exports = [
 	config: controller.stations.stop
     },
     {
-	method: 'POST',
+	method: 'PUT',
 	path: '/schedule',
 	config: controller.stations.schedule
     },

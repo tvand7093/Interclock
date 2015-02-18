@@ -3,6 +3,7 @@ var self = {}
 var ApiResult = require("./apiCodes").ApiResult
 var codes = require('./apiCodes').statusCodes
 var Scheduler = require('./Scheduler').Scheduler
+var uuid = require('node-uuid')
 
 function Manager(){
     this.stations = new StationManager()
@@ -24,16 +25,16 @@ Manager.prototype.scheduleREST = function (req, reply){
     var endDay = req.payload.endDay
     var deviceId = req.payload.deviceId
     var stationId = req.payload.stationId
-
+    var alarmId = uuid.v4()
+    console.log(alarmId)
     var alarmTrigger = function(){
 	console.log("alarm triggered!")
-	self.stations.play(deviceId, stationId)
+	self.stations.play(deviceId, alarmId, stationId)
     }
     
-    var alarmId = self.alarms.createAlarm(hour, min, beginDay, endDay,
+    self.alarms.createAlarm(alarmId, hour, min, beginDay, endDay,
 					  alarmTrigger)
 					  
-
     reply(
 	new ApiResult('', codes.success, "Created new alarm.", alarmId)
     )
@@ -59,11 +60,7 @@ Manager.prototype.stopREST = function (req, reply){
 }
 
 Manager.prototype.statusREST = function(req, reply){
-    var data = new ApiResult('',
-			     codes.success,
-			     self.stations.isRunning(),
-			     self.alarms.list())
-    reply(data)
+    reply(self.stations.running())
 }
 
 Manager.prototype.searchREST = function (req, reply){

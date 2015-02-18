@@ -7,6 +7,7 @@ var ApiResult = Results.ApiResult
 function AudioManager(){
     this.mPlayer = 'mplayer'
     this.currentAudio = null
+    this.meta = null
     this.stopCommand = "quit\n"
 
     //require volume to be up.
@@ -14,19 +15,29 @@ function AudioManager(){
     proc.exec(vol)
 }
 
-AudioManager.prototype.isRunning = function(){
-    return this.currentAudio != null ? "Playing audio." : "Inactive"
+AudioManager.prototype.running = function(){
+   
+    var msg = this.currentAudio != null ? "Playing audio." : "Inactive"
+    
+    return new ApiResult('',
+			 codes.success,
+			 msg,
+			 this.meta)
 }
 
-AudioManager.prototype.beginAudio = function(deviceId, url){
+AudioManager.prototype.beginAudio = function(deviceId, alarmId, name, url){
     if(this.currentAudio == null){
 	this.currentAudio = proc.spawn(this.mPlayer, ["-slave", url],
 				       {stdio: ['pipe', 'pipe', 'pipe']})
 	this.currentAudio.stdout.pipe(process.stdout);
+	this.meta.alarmId = alarmId
+	this.meta.name = name
+	this.meta.url = url
     }
 
     return new ApiResult(deviceId, codes.success,
-				 "Succesfully started playing audio.")
+			 "Succesfully started playing audio.",
+			 this.meta)
 }
 
 AudioManager.prototype.stop = function(deviceId){
@@ -34,13 +45,14 @@ AudioManager.prototype.stop = function(deviceId){
 	this.currentAudio.stdin.write(this.stopCommand)
 	this.isRunningAudio = false
 	this.currentAudio = null
+	this.meta = null
 	return new ApiResult(deviceId, codes.success,					     "Succesfully stopped playing audio.")
     }
 }
 
-AudioManager.prototype.play = function(deviceId, url){
+AudioManager.prototype.play = function(deviceId, alarmId, name, url){
     this.stop(deviceId)
-    this.beginAudio(deviceId, url)
+    return this.beginAudio(deviceId, alarmId, name, url)
 }  
 
 exports.AudioManager = AudioManager

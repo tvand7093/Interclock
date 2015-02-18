@@ -42,7 +42,8 @@ module.exports = {
 		minute: Joi.number().min(0).max(59).required(),
 		beginDay: Joi.number().min(0).max(8).required(),
 		endDay: Joi.number().min(0).max(8).required(),
-		deviceId: Joi.string().min(1).required()
+		deviceId: Joi.string().min(1).required(),
+		stationId: Joi.number().min(1).required()
 	    }
 	}
     },
