@@ -6,8 +6,7 @@ An internet based alarm clock system using Node.js.
 * mplayer
 * Node.js
 * Raspberry Pi
-
-## Optional
-
 * Interclock.Connect Companion app (currently iOS only).
+
+
 
