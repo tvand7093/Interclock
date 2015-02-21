@@ -51,9 +51,8 @@ module.exports = {
 	handler: manager.scheduleStopREST,
 	id: 'scheduleCancel',
 	validate: {
-	    payload: {
+	    params: {
 		alarmId: Joi.string().min(1).required(),
-		deviceId: Joi.string().min(1).required()
 	    }
 	}
     },

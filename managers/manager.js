@@ -13,6 +13,7 @@ function Manager(){
 
 Manager.prototype.scheduleStopREST = function(req, reply){
     self.alarms.cancelAlarm(req.params.alarmId)
+    self.stations.stop()
     reply(
 	new ApiResult('', codes.success, "Canceled alarm")
     )
@@ -26,9 +27,8 @@ Manager.prototype.scheduleREST = function (req, reply){
     var deviceId = req.payload.deviceId
     var stationId = req.payload.stationId
     var alarmId = uuid.v4()
-    console.log(alarmId)
+
     var alarmTrigger = function(){
-	console.log("alarm triggered!")
 	self.stations.play(deviceId, alarmId, stationId)
     }
     
@@ -44,6 +44,7 @@ Manager.prototype.playREST = function(req, reply){
     self.stations.play(req.payload.deviceId,
 		       req.payload.stationId,
 		       function(station){
+			   console.log(station)
 			   reply(
 			       new ApiResult(req.payload.deviceId,
 						 codes.success,
@@ -52,7 +53,7 @@ Manager.prototype.playREST = function(req, reply){
 }
 
 Manager.prototype.stopREST = function (req, reply){
-    self.stations.stop(req.payload.deviceId)
+    self.stations.stop()
     var result = new ApiResult(req.payload.deviceId,
 			       codes.success, "Stopped succesfully")
     

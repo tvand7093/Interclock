@@ -57,7 +57,7 @@ StationManager.prototype.search = function(deviceId, search, callback){
     }
 }
 
-StationManager.prototype.stop = function(deviceId){
+StationManager.prototype.stop = function(){
     //stop all radio from playing
     self.audio.stop()
 }

@@ -7,7 +7,7 @@ var ApiResult = Results.ApiResult
 function AudioManager(){
     this.mPlayer = 'mplayer'
     this.currentAudio = null
-    this.meta = null
+    this.meta = {}
     this.stopCommand = "quit\n"
 
     //require volume to be up.
@@ -18,9 +18,10 @@ function AudioManager(){
 AudioManager.prototype.running = function(){
    
     var msg = this.currentAudio != null ? "Playing audio." : "Inactive"
+    var code = this.currentAudio != null ? 0 : -1
     
     return new ApiResult('',
-			 codes.success,
+			 code,
 			 msg,
 			 this.meta)
 }
@@ -40,13 +41,13 @@ AudioManager.prototype.beginAudio = function(deviceId, alarmId, name, url){
 			 this.meta)
 }
 
-AudioManager.prototype.stop = function(deviceId){
+AudioManager.prototype.stop = function(){
     if(this.currentAudio != null){
 	this.currentAudio.stdin.write(this.stopCommand)
 	this.isRunningAudio = false
 	this.currentAudio = null
-	this.meta = null
-	return new ApiResult(deviceId, codes.success,					     "Succesfully stopped playing audio.")
+	this.meta = {}
+	return new ApiResult('', codes.success,					     "Succesfully stopped playing audio.")
     }
 }
 
