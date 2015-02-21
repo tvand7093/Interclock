@@ -9,5 +9,5 @@ An internet based alarm clock system using Node.js.
 
 ## Optional
 
-* Interclock Companion iOS app.
+* Interclock.Connect Companion app (currently iOS only).
 
