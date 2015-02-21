@@ -3,10 +3,10 @@ An internet based alarm clock system using Node.js.
 
 # Requirements
 
-* mplayer
-* Node.js
+* mplayer installed
+* [Node.js] (http://nodejs.org) installed
 * Raspberry Pi
-* Interclock.Connect Companion app (currently iOS only).
+* [Interclock.Connect] (http://www.github.com/tvand7093/interclock-connect) Companion app (currently iOS only).
 
 
 
