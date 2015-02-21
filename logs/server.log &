@@ -1,1 +1,5 @@
 Express server listening on port 3000
+[0mGET /status [33m404 [0m226.000 ms - 19[0m
+[0mPUT /schedule [33m404 [0m10333.854 ms - 21[0m
+[0mGET /status [33m404 [0m10382.250 ms - 19[0m
+[0mGET /status [33m404 [0m12.772 ms - 19[0m

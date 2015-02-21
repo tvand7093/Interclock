@@ -2,7 +2,7 @@ var StationManager = require('./stationManager').StationManager
 var self = {}
 var ApiResult = require("./apiCodes").ApiResult
 var codes = require('./apiCodes').statusCodes
-var Scheduler = require('./Scheduler').Scheduler
+var Scheduler = require('./scheduler').Scheduler
 var uuid = require('node-uuid')
 
 function Manager(){
